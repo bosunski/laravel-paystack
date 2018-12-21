@@ -8,6 +8,7 @@ class Endpoint
 	const INIT_TRANSACTION              = "/transaction/initialize";
 	const VERIFY_TRANSACTION            = "/transaction/verify/";
 	const EXPORT_TRANSACTION            = "/transaction/export";
+	const CHARGE_AUTHORIZATION          = "/transaction/charge_authorization";
 	const TRANSACTIONS                  = "/transaction";
 	const PLANS                         = "/plan";
 	const CREATE_PLAN                   = "/plan";

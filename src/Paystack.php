@@ -200,7 +200,7 @@ class Paystack
      */
     private function verifyTransactionAtGateway()
     {
-        $transactionRef = request()->query('trxref');
+        $transactionRef = request()->trxref;
 
         $relativeUrl = Endpoint::VERIFY_TRANSACTION . "{$transactionRef}";
 
@@ -660,5 +660,17 @@ class Paystack
         $this->setRequestOptions();
         return $this->setHttpResponse(Endpoint::UPDATE_SUB_ACCOUNT . "{$subaccount_code}", "PUT", array_filter($data))->getResponse();
 
+    }
+
+    public function chargeCard()
+    {
+	    $data = [
+		    "amount"                => request()->amount,
+		    "authorization_code"    => request()->authorization_code,
+		    "email"                 => request()->email,
+	    ];
+
+	    $this->setRequestOptions();
+	    return $this->setHttpResponse(Endpoint::CHARGE_AUTHORIZATION, 'POST', array_filter($data))->getResponse();
     }
 }
