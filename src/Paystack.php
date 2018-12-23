@@ -662,13 +662,14 @@ class Paystack
 
     }
 
-    public function chargeCard()
+    public function chargeCard($data = null)
     {
-	    $data = [
-		    "amount"                => request()->amount,
-		    "authorization_code"    => request()->authorization_code,
-		    "email"                 => request()->email,
-	    ];
+    	if (!$data)
+		    $data = [
+			    "amount"                => request()->amount,
+			    "authorization_code"    => request()->authorization_code,
+			    "email"                 => request()->email,
+		    ];
 
 	    $this->setRequestOptions();
 	    return $this->setHttpResponse(Endpoint::CHARGE_AUTHORIZATION, 'POST', array_filter($data))->getResponse();
