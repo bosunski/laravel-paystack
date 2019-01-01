@@ -662,6 +662,13 @@ class Paystack
 
     }
 
+	/**
+	 * Charges an Authorized card
+	 * @param null $data
+	 *
+	 * @return array
+	 * @throws IsNullException
+	 */
     public function chargeCard($data = null)
     {
     	if (!$data)
