@@ -33,4 +33,7 @@ class Endpoint
 	const FETCH_SUB_ACCOUNT             = "/subaccount/";
 	const LIST_SUB_ACCOUNT              = "/subaccount/?perPage=";
 	const UPDATE_SUB_ACCOUNT            = "/subaccount/?perPage=";
+	const RESOLVE_ACCOUNT_NUMBER        = "/bank/resolve";
+	const CREATE_TRANSFER_RECIPIENT     = "/transferrecipient";
+	const INITIATE_TRANSFER             = "/transfer";
 }

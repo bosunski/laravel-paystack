@@ -12,6 +12,7 @@
 namespace Unicodeveloper\Paystack;
 
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\ClientException;
 use Illuminate\Support\Facades\Config;
 use Unicodeveloper\Paystack\Exceptions\IsNullException;
 use Unicodeveloper\Paystack\Exceptions\PaymentVerificationFailedException;
@@ -158,11 +159,15 @@ class Paystack
         if (is_null($method)) {
             throw new IsNullException("Empty method not allowed");
         }
-
-        $this->response = $this->client->{strtolower($method)}(
-            $this->baseUrl . $relativeUrl,
-            ["body" => json_encode($body)]
-        );
+		try {
+			$this->response = $this->client->{strtolower($method)}(
+				$this->baseUrl . $relativeUrl,
+				["body" => json_encode($body)]
+			);
+		} catch (ClientException $e) {
+			$response = $e->getResponse();
+			$this->response = $response;
+		}
 
         return $this;
     }
@@ -681,4 +686,50 @@ class Paystack
 	    $this->setRequestOptions();
 	    return $this->setHttpResponse(Endpoint::CHARGE_AUTHORIZATION, 'POST', array_filter($data))->getResponse();
     }
+
+	public function resolveAccountNumber($data = null)
+	{
+		if (!$data)
+			$data = [
+				"account_number"                => request()->account_number,
+				"bank_code"                     => request()->bank_code,
+			];
+
+		$this->setRequestOptions();
+		return $this->setHttpResponse(Endpoint::RESOLVE_ACCOUNT_NUMBER . '?account_number=' . $data['account_number'] . '&bank_code=' . $data['bank_code'], 'GET', array_filter($data))->getResponse();
+	}
+
+
+	public function createTransferRecipient($data = null)
+	{
+		if (!$data)
+			$data = [
+				"type"               => request()->type,
+				"name"               => request()->name,
+				"description"        => request()->description,
+				"account_number"     => request()->account_number,
+				"bank_code"          => request()->bank_code,
+				"currency"           => request()->currency,
+				"meta_data"          => request()->meta_data,
+			];
+
+		$this->setRequestOptions();
+		return $this->setHttpResponse(Endpoint::CREATE_TRANSFER_RECIPIENT, 'POST', array_filter($data))->getResponse();
+	}
+
+	public function initiateTransfer($data = null)
+	{
+		if (!$data)
+			$data = [
+				"source"        => request()->source,
+				"amount"        => request()->amount,
+				"currency"      => request()->currency,
+				"reason"        => request()->reason,
+				"reference"     => request()->reference,
+				"recipient"     => request()->recipient,
+			];
+
+		$this->setRequestOptions();
+		return $this->setHttpResponse(Endpoint::INITIATE_TRANSFER, 'POST', array_filter($data))->getResponse();
+	}
 }
